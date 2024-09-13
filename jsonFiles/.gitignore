@@ -1,0 +1,4 @@
+# Just ignoring the files created except for one, and the gitignore file itself
+*
+!6a5c5b8df8e6a869b35a08c5e6fb10eeb62c3c2b7e9c9de5cb815f4588a5bcca.json
+!.gitignore
