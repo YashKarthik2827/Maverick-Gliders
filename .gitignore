@@ -1,2 +1,4 @@
 Maverick-Gliders.git
-.DS_Store/
+.DS_Store
+jsonFiles
+.env
