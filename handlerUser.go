@@ -27,13 +27,13 @@ func handlerUser(w http.ResponseWriter, r *http.Request) {
 		Timeout: time.Duration(2) * time.Second,
 	}
 	resp, err := client.Get(fmt.Sprintf("%s&lat=%v&lon=%v&format=json", urlString, queryStr["lat"][0], queryStr["lon"][0]))
-	defer resp.Body.Close()
 	if err != nil {
 		// Respond with Error
 		log.Println("Oh NORR Error, could't get response", err)
 		w.WriteHeader(500)
 		return
 	}
+	defer resp.Body.Close()
 	log.Println("API Call made successfully")
 	// log.Println(resp.Body)
 
