@@ -1,4 +1,4 @@
-module github.com/adofm/Maverick-Gliders.git
+module github.com/YashKarthik2827/Maverick-Gliders.git
 
 go 1.23.1
 
