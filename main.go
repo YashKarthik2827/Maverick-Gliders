@@ -28,6 +28,9 @@ func main() {
 	mux.HandleFunc("/air", func(w http.ResponseWriter, r *http.Request) {
 		handlerGetAir(w, r, apiKey)
 	})
+	mux.HandleFunc("/cloud",func(w http.ResponseWriter, r *http.Request){
+		handlerGetCloud(w,r,apiKey)
+	})
 	log.Println("Server starting at port 8080")
 	http.ListenAndServe(":8080", mux)
 }
