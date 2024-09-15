@@ -31,11 +31,13 @@ func main() {
 	})
 	// [METHOD] /path, the space b/w method and / is important
 	// Creating Path for Basic Package and Wind Package
-	mux.HandleFunc("GET /basic", handlerUser)
-	mux.HandleFunc("GET /wind", handlerUser)
-	log.Println("Server starting at port 8080")
+	mux.HandleFunc("GET /basic", handlerGetBasic)
+	mux.HandleFunc("GET /wind", handlerGetWind)
 
 	// If u don't pass in your ServeMux, it will use the default ServeMux
 	log.Println("Server starting at port 8080")
-	http.ListenAndServe(":8080", mux)
+	err = http.ListenAndServe(":8080", mux)
+	if err != nil {
+		log.Fatal("Server Disconnected")
+	}
 }

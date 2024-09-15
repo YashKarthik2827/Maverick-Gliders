@@ -2,4 +2,9 @@
 jsonFiles
 Maverick-Gliders.git
 .DS_Store
-/vendor
+<<<<<<< Updated upstream
+=======
+jsonFiles
+.env
+>>>>>>> Stashed changes
+vendor
