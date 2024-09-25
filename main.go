@@ -29,6 +29,9 @@ func main() {
 	mux.HandleFunc("/air", func(w http.ResponseWriter, r *http.Request) {
 		handlerGetAir(w, r, apiKey)
 	})
+	mux.HandleFunc("/cloud",func(w http.ResponseWriter, r *http.Request) {
+		handlerGetCloud(w,r,apiKey)
+	})
 	// [METHOD] /path, the space b/w method and / is important
 	// Creating Path for Basic Package and Wind Package
 	mux.HandleFunc("GET /basic", handlerGetBasic)
