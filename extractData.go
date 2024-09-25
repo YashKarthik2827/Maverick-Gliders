@@ -6,22 +6,22 @@ import (
 	"os"
 )
 
-func extractData[T Wind | Basic](filePath string, params T) ([]byte, error) {
-	// Reading data frm the file
+func extractData[T Basic | Wind | Air | Cloud ](filePath string, params *T) ([]byte, error) {
+	// Reading data from the file
 	jsonData, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Println("Couldn't read from file")
 		return []byte{}, err
 	}
 
-	// Extracting what I wanna send to the user
+	// Extracting what I want to send to the user
 	err = json.Unmarshal(jsonData, &params)
 	if err != nil {
-		log.Println("Couldn't unMarshall")
+		log.Println("Couldn't unmarshal")
 		return []byte{}, err
 	}
 
-	// converting the extracted data to json again
+	// Converting the extracted data to JSON again
 	dat, err := json.Marshal(params)
 	if err != nil {
 		log.Printf("Failed to marshal JSON response: %v", params)
@@ -29,3 +29,4 @@ func extractData[T Wind | Basic](filePath string, params T) ([]byte, error) {
 	}
 	return dat, nil
 }
+
