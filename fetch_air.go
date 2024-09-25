@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -19,8 +20,6 @@ func FetchAirData(lat, lon, apiKey string) (*http.Response, error) {
 	}
 	return resp, nil
 }
-
-// handlerGetAir handles the /air endpoint
 func handlerGetAir(w http.ResponseWriter, r *http.Request, apiKey string) {
 	lat := r.URL.Query().Get("lat")
 	lon := r.URL.Query().Get("lon")
@@ -32,10 +31,25 @@ func handlerGetAir(w http.ResponseWriter, r *http.Request, apiKey string) {
 		return
 	}
 	defer resp.Body.Close() // closing the class using defer already expained how defer works in write json (lifo)
-	_, err = WriteJSONToFile(resp)
+	filePath,err := WriteJSONToFile(resp)
 	if err != nil {
 		http.Error(w, "Failed to write JSON to file", http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, "Air data fetched and saved successfully")
+	
+
+	// Extracting the data;
+	var params Air
+	dat, err := extractData(filePath, &params)
+	if err != nil {
+		http.Error(w, "Failed to extract the air data", http.StatusInternalServerError)
+		log.Println("Error extracting air data:", err) //  logging the error
+		return
+	}
+	w.Header().Add("Content-Type", "application/json") 
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(dat)
+	if err != nil {
+		log.Println("Couldn't write response body:", err) //  logging the error
+	}
 }
