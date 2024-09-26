@@ -4,16 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
-
-	"github.com/joho/godotenv"
 )
 
-func handlerGetBasic(w http.ResponseWriter, r *http.Request) {
-	godotenv.Load(".env")
-	urlString := os.Getenv("BaseURL")
-
+func (apiCfg apiConifg) handlerGetBasic(w http.ResponseWriter, r *http.Request) {
 	// Extracting the latitude and longitude from the query string
 	log.Println(r.URL.Query())
 	queryStr := r.URL.Query()
@@ -26,7 +20,7 @@ func handlerGetBasic(w http.ResponseWriter, r *http.Request) {
 	client := http.Client{
 		Timeout: time.Duration(2) * time.Second,
 	}
-	resp, err := client.Get(fmt.Sprintf("%s&lat=%v&lon=%v&format=json", urlString, queryStr["lat"][0], queryStr["lon"][0]))
+	resp, err := client.Get(fmt.Sprintf("%s&lat=%v&lon=%v&format=json", apiCfg.baseURL, queryStr["lat"][0], queryStr["lon"][0]))
 	if err != nil {
 		// Respond with Error
 		log.Println("Oh NORR Error, could't get response", err)
@@ -47,7 +41,31 @@ func handlerGetBasic(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var params Basic
-	dat, err := extractData(filePath, params)
+	params, err = parseJSON(filePath, params)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Println(err)
+		return
+	}
+
+	// CRUD
+	insertId, err := apiCfg.insertRecord(params)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("Error storing data in db, %v", err)
+		return
+	}
+
+	resultCursor := apiCfg.readRecord(insertId)
+	var result Basic
+	err = resultCursor.Decode(&result)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("Error marshalling result record %v", err)
+	}
+	log.Println(result)
+
+	dat, err := createJSON(params)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Println(err)

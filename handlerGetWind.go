@@ -10,7 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func handlerGetWind(w http.ResponseWriter, r *http.Request) {
+func (apiCfg apiConifg) handlerGetWind(w http.ResponseWriter, r *http.Request) {
 	godotenv.Load(".env")
 	urlString := os.Getenv("BaseURL")
 
@@ -47,7 +47,31 @@ func handlerGetWind(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var params Wind
-	dat, err := extractData(filePath, params)
+	params, err = parseJSON(filePath, params)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Println(err)
+		return
+	}
+
+	// CRUD
+	insertId, err := apiCfg.insertRecord(params)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("Error storing data in db, %v", err)
+		return
+	}
+
+	resultCursor := apiCfg.readRecord(insertId)
+	var result Basic
+	err = resultCursor.Decode(&result)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("Error marshalling result record %v", err)
+	}
+	log.Println(result)
+
+	dat, err := createJSON(params)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Println(err)
