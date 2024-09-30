@@ -47,7 +47,7 @@ func handlerGetBasic(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var params Basic
-	dat, err := extractData(filePath, params)
+	dat, err := extractData(filePath, &params)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Println(err)

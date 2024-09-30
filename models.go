@@ -40,3 +40,27 @@ type Wind struct {
 		Winddirection []int     `json:"winddirection"`
 	} `json:"data_day"`
 }
+
+//adding wind and air
+
+type Air struct {
+	Base
+	DataDay struct {
+		Time              []string  `json:"time"`
+		AirTemperatureMax []float64 `json:"wetbulbglobetemperature_max"`
+		AirTemperatureMin []float64 `json:"wetbulbglobetemperature_min"`
+		AirPressure       []float64 `json:"convectivecloudbase_pressure"`
+	} `json:"data_day"`
+}
+
+// Cloud response structure
+type Cloud struct {
+	Base
+	DataDay struct {
+		Time            []string  `json:"time"`
+		CloudCoverMean  []float64 `json:"totalcloudcover_mean"`
+		CloudCoverMax   []float64 `json:"totalcloudcover_max"`
+		CloudCoverMin   []float64 `json:"totalcloudcover_min"`
+		CloudHeightMean []float64 `json:"highclouds_mean"`
+	} `json:"data_day"`
+}
